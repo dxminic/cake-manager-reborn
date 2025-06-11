@@ -46,9 +46,11 @@ public class CakeConsumerServiceTest {
         cakeDto.setDesc("Delicious");
         cakeDto.setImage("img.jpg");
         List<CakeDto> cakeList = List.of(cakeDto);
+        String rawJson = "[{\"title\":\"Chocolate Cake\",\"desc\":\"Delicious\",\"image\":\"img.jpg\"}]";
         io.micronaut.http.client.BlockingHttpClient blocking = mock(io.micronaut.http.client.BlockingHttpClient.class);
         when(httpClient.toBlocking()).thenReturn(blocking);
-        when(blocking.retrieve(any(HttpRequest.class), eq(io.micronaut.core.type.Argument.listOf(CakeDto.class)))).thenReturn(cakeList);
+        when(blocking.retrieve(any(HttpRequest.class), eq(String.class))).thenReturn(rawJson);
+        when(objectMapper.readValue(rawJson, io.micronaut.core.type.Argument.listOf(CakeDto.class))).thenReturn(cakeList);
 
         cakeConsumerService.loadCakes();
 
@@ -64,9 +66,11 @@ public class CakeConsumerServiceTest {
     void testLoadCakes_emptyList() throws Exception {
         String url = "http://test.com/cakes.json";
         when(cakeConfig.getUrl()).thenReturn(url);
+        String rawJson = "[]";
         io.micronaut.http.client.BlockingHttpClient blocking = mock(io.micronaut.http.client.BlockingHttpClient.class);
         when(httpClient.toBlocking()).thenReturn(blocking);
-        when(blocking.retrieve(any(HttpRequest.class), eq(io.micronaut.core.type.Argument.listOf(CakeDto.class)))).thenReturn(Collections.emptyList());
+        when(blocking.retrieve(any(HttpRequest.class), eq(String.class))).thenReturn(rawJson);
+        when(objectMapper.readValue(rawJson, io.micronaut.core.type.Argument.listOf(CakeDto.class))).thenReturn(Collections.emptyList());
 
         cakeConsumerService.loadCakes();
         verify(repository, never()).save(any());
@@ -84,9 +88,11 @@ public class CakeConsumerServiceTest {
     void testLoadCakes_exceptionDuringLoad() throws Exception {
         String url = "http://test.com/cakes.json";
         when(cakeConfig.getUrl()).thenReturn(url);
+        String rawJson = "invalid json";
         io.micronaut.http.client.BlockingHttpClient blocking = mock(io.micronaut.http.client.BlockingHttpClient.class);
         when(httpClient.toBlocking()).thenReturn(blocking);
-        when(blocking.retrieve(any(HttpRequest.class), eq(io.micronaut.core.type.Argument.listOf(CakeDto.class)))).thenThrow(new RuntimeException("fail"));
+        when(blocking.retrieve(any(HttpRequest.class), eq(String.class))).thenReturn(rawJson);
+        when(objectMapper.readValue(rawJson, io.micronaut.core.type.Argument.listOf(CakeDto.class))).thenThrow(new RuntimeException("fail"));
         cakeConsumerService.loadCakes();
         verify(repository, never()).save(any());
     }
