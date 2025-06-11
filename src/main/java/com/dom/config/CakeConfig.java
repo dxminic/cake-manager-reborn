@@ -9,6 +9,7 @@ import io.micronaut.context.annotation.Requires;
 @Requires(property = "cake")
 public class CakeConfig {
 
+    // This is the URL where the cake data can be fetched from. (Dummy commit for CI pipeline testing)
     private String url;
 
     public String getUrl() {
