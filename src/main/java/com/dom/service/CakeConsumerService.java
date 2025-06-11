@@ -41,17 +41,27 @@ public class CakeConsumerService {
 
     private void loadCakesFromUrl() throws Exception {
         String urlString = cakeConfig.getUrl();
-        if (urlString == null || urlString.isEmpty()) {
+        if (urlString.isEmpty()) {
             LOG.warn("Cake data URL is not configured.");
             return;
         }
 
         URI uri = URI.create(urlString);
         LOG.debug("Loading cakes from URL: {}", uri);
-        HttpRequest<?> request = HttpRequest.GET(uri).header("Accept", "application/json");
+        HttpRequest<?> request = HttpRequest.GET(uri).header("Accept", "text/plain");
         // We use toBlocking() for simplicity in this example, but I would consider using reactive streams in production code. This just makes it work like RestTemplate for exmaple.
         // Simlarly we use `retrieve` to get the response directly as a list of CakeDto objects instead of `exchange` which would return a HttpResponse with statis, headers, body etc.
-        List<CakeDto> cakes = httpClient.toBlocking().retrieve(request, Argument.listOf(CakeDto.class));
+        // The endpoint is sending Content-Type: text/plain, so we need to read it as a String first then parse it as a list of CakeDto objects.
+        String rawCake = httpClient.toBlocking().retrieve(request, String.class);
+        LOG.debug("Response received: {}", rawCake);
+        List<CakeDto> cakes;
+        try {
+            cakes = objectMapper.readValue(rawCake, Argument.listOf(CakeDto.class));
+        } catch (Exception e) {
+            LOG.error("Failed to parse cake data from URL: {}", urlString, e);
+            // This could be a custom exception type in a real application, instead of a generic Exception.
+            throw e;
+        }
 
         if (cakes.isEmpty()) {
             LOG.info("No cakes found at the URL: {}", urlString);

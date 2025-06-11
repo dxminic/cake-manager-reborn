@@ -7,6 +7,8 @@ This application tackles the following issues set out in the project readme:
 - [x] **CRUD operations on Cakes**: Provide a RESTful API to create, read, update, and delete cakes.
 - [x] **External API Integration**: Fetch cakes from an external API and store them in the database.
 - [x] **Some unit tests**: Implemented unit tests for the service.
+- [x] **Basic CI/CD pipeline**: A basic CI/CD pipeline is set up using GitHub Actions to run tests and build the
+  application.
 
 On Application startup, the CakeConsumerService will fetch the cakes from the external API and store them in the
 database.
