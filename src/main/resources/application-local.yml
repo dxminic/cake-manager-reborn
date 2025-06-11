@@ -1,0 +1,19 @@
+micronaut:
+  application:
+    name: cake-manager-reborn
+  security:
+    enabled: false
+datasources:
+  default:
+    url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ''
+    driver-class-name: org.h2.Driver
+    dialect: H2
+liquibase:
+  datasources:
+    default:
+      change-log: classpath:db/liquibase-changelog.yaml
+cake:
+  url: https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/cake.json
+

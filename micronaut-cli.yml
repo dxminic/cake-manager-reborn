@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.dom
+testFramework: junit
+sourceLanguage: java
+buildTool: maven
+features: [ app-name, data, data-jdbc, h2, http-client, java, java-application, jdbc-hikari, jul-to-slf4j, junit, liquibase, logback, maven, maven-enforcer-plugin, micronaut-aot, micronaut-http-validation, netty-server, readme, security, security-annotations, serialization-jackson, shade, static-resources, yaml, yaml-build ]

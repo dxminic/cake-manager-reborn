@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: dom
+      changes:
+        - createTable:
+            tableName: cake
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: desc
+                  type: VARCHAR(255)
+              - column:
+                  name: image
+                  type: VARCHAR(255)
